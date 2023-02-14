@@ -34,22 +34,25 @@ fun buildGraph(build: Graph.() -> Unit): Graph {
     return Graph().also(build)
 }
 
-fun MutableList<Node>.node(prefix: String = "", body: () -> String) {
-    this += Node(this.size + 1, description = prefix + body())
+fun MutableList<Node>.node(prefix: String = "", body: () -> String): Int {
+    val id = this.size + 1
+    this += Node(id, description = prefix + body())
+    return id
 }
 
 fun main() {
     val builtGraph = buildGraph {
         nodes {
-            node { "Вершина добавленная вручную".also(::println) }
-            node { "Вторая добавленная вершина".also(::println) }
-            node(prefix = "Из консоли: ") {
+            val first = node { "Вершина добавленная вручную".also(::println) }
+            val second = node { "Вторая добавленная вершина".also(::println) }
+            val third = node(prefix = "Из консоли: ") {
                 print("Введите описание третьей вершины: ")
                 readln()
             }
+
+            +(first connected second)
+            +(first connected third)
         }
-        +(1 connected 2)
-        +(1 connected 3)
     }
     println(builtGraph)
 }
