@@ -14,7 +14,7 @@ class Graph {
         edges += this
     }
 
-    infix fun Int.connected(to: Int): Pair<Node, Node> = nodeList[this - 1] to nodeList[to - 1]
+    infix fun Int.connectedTo(to: Int): Pair<Node, Node> = nodeList[this - 1] to nodeList[to - 1]
 
     override fun toString(): String {
         return buildString {
@@ -34,10 +34,10 @@ fun buildGraph(build: Graph.() -> Unit): Graph {
     return Graph().also(build)
 }
 
-fun MutableList<Node>.node(prefix: String = "", body: () -> String): Int {
-    val id = this.size + 1
-    this += Node(id, description = prefix + body())
-    return id
+fun MutableList<Node>.node(prefix: String = "", body: () -> String): Node {
+    val added = Node(size + 1, description = prefix + body())
+    this += added
+    return added
 }
 
 fun main() {
@@ -45,14 +45,14 @@ fun main() {
         nodes {
             val first = node { "Вершина добавленная вручную".also(::println) }
             val second = node { "Вторая добавленная вершина".also(::println) }
-            val third = node(prefix = "Из консоли: ") {
+            node(prefix = "Из консоли: ") {
                 print("Введите описание третьей вершины: ")
                 readln()
             }
 
-            +(first connected second)
-            +(first connected third)
+            +(first to second)
         }
+        +(1 connectedTo 3)
     }
     println(builtGraph)
 }
